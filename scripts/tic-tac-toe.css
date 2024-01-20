@@ -1,0 +1,36 @@
+/* Styling for Tic Tac Toe */
+
+div#ticTacToe {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Title */
+div#ticTacToe #title {
+  font: bold 20pt 'Times New Roman', serif;
+}
+
+/* The Drawing Board/Canvas */
+/* div#ticTacToe board { */
+  /* border: 2px solid black; */
+  /* border-radius: 4px; */
+/* } */
+
+/* New Game button */
+div#ticTacToe #newGameButton {
+  width: 120px;
+  background-color: #09f;
+  color: white;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: large;
+  margin: 6px;
+}
+
+div#ticTacToe #newGameButton:hover {
+  background-color: #07d;
+}
