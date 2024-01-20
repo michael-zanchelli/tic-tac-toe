@@ -6,15 +6,15 @@
 class TicTacToeUI {
   #ticTacToe; /** The handle to the TicTacToe class object */
 
-  #canvasCtx; /** The canvas context used to draw the Tic Tac Toe board curve */
+  #canvasCtx; /** The canvas context used to draw the Tic Tac Toe board */
 
   #newGameButton; /** New Game button */
 
   static #LINE_WIDTH = 5;
-  static #CELL_MARGIN = 10;
-  static #CELL_DRAW_SIZE = 60;
+  static #CELL_MARGIN = 15;
+  static #CELL_DRAW_SIZE = 50;
   static #CELL_SIZE = TicTacToeUI.#CELL_DRAW_SIZE + 2 * TicTacToeUI.#CELL_MARGIN;
-  static #BOARD_SIZE = 3 * TicTacToeUI.#CELL_SIZE + 2 * TicTacToeUI.#LINE_WIDTH;
+  static #BOARD_SIZE = 3 * TicTacToeUI.#CELL_SIZE;
 
   /** Constructor
    * Note: this is called after page DOM is full loaded
@@ -40,13 +40,13 @@ class TicTacToeUI {
     this.#canvasCtx.beginPath();
 
     // Draw vertical lines
-    for (let x = TicTacToeUI.#CELL_SIZE - 1; x < TicTacToeUI.#BOARD_SIZE - 1; x += TicTacToeUI.#CELL_SIZE + TicTacToeUI.#LINE_WIDTH) {
+    for (let x = TicTacToeUI.#CELL_SIZE - 1; x < TicTacToeUI.#BOARD_SIZE - 1; x += TicTacToeUI.#CELL_SIZE /* + TicTacToeUI.#LINE_WIDTH */ ) {
       this.#canvasCtx.moveTo(x, 0);
       this.#canvasCtx.lineTo(x, TicTacToeUI.#BOARD_SIZE - 1);
     }
 
     // Draw horizontal lines
-    for (let y = TicTacToeUI.#CELL_SIZE - 1; y < TicTacToeUI.#BOARD_SIZE - 1; y += TicTacToeUI.#CELL_SIZE + TicTacToeUI.#LINE_WIDTH) {
+    for (let y = TicTacToeUI.#CELL_SIZE - 1; y < TicTacToeUI.#BOARD_SIZE - 1; y += TicTacToeUI.#CELL_SIZE /* + TicTacToeUI.#LINE_WIDTH */ ) {
       this.#canvasCtx.moveTo(0, y);
       this.#canvasCtx.lineTo(TicTacToeUI.#BOARD_SIZE - 1, y);
     }
@@ -57,12 +57,35 @@ class TicTacToeUI {
     board.onclick = (event) => this.boardClickHandler(event);
   }
 
+  #drawCell(row, col, player) {
+    let x, y;
+    this.#canvasCtx.beginPath();
+    if (player == 1) { // user = player '1' = X
+      // First, draw line from upper-left to lower-right
+      x = (col * TicTacToeUI.#CELL_SIZE) + TicTacToeUI.#CELL_MARGIN;
+      y = (row * TicTacToeUI.#CELL_SIZE) + TicTacToeUI.#CELL_MARGIN;
+      this.#canvasCtx.moveTo(x, y);
+      this.#canvasCtx.lineTo(x + TicTacToeUI.#CELL_DRAW_SIZE, y + TicTacToeUI.#CELL_DRAW_SIZE);
+
+      // Then, draw line from upper-right to lower-left
+      x = (col * TicTacToeUI.#CELL_SIZE) + TicTacToeUI.#CELL_MARGIN + TicTacToeUI.#CELL_DRAW_SIZE;
+      this.#canvasCtx.moveTo(x, y);
+      this.#canvasCtx.lineTo(x - TicTacToeUI.#CELL_DRAW_SIZE, y + TicTacToeUI.#CELL_DRAW_SIZE);
+    }
+    else {  // player '2' = O
+      x = (col * TicTacToeUI.#CELL_SIZE) + TicTacToeUI.#CELL_MARGIN + (TicTacToeUI.#CELL_DRAW_SIZE / 2);
+      y = (row * TicTacToeUI.#CELL_SIZE) + TicTacToeUI.#CELL_MARGIN + (TicTacToeUI.#CELL_DRAW_SIZE / 2);
+      this.#canvasCtx.arc(x, y, TicTacToeUI.#CELL_DRAW_SIZE / 2, 0, 2 * Math.PI);
+    }
+    this.#canvasCtx.stroke();
+  }
+
   /** ourTurn
    * Computer takes a turn
    */
   async ourTurn() {
-    let result = { row: 0, column: 0 };
-    this.#processTurn(result.row, result.column, 2); // We're player '2'
+    let result = this.#ticTacToe.nextMove();
+    this.#processTurn(result.row, result.column, 2); // We are player '2'
   }
 
   #processWin(result) {
@@ -79,9 +102,10 @@ class TicTacToeUI {
   #processTurn(row, col, player) {
     console.log("row=" + row + ", column=" + col + ", player=" + player);
 
+    this.#drawCell(row, col, player);
+
     // Mark this cell with player id
     let result = this.#ticTacToe.markAndCheck(row, col, player);
-
     console.log("result=" + result.status);
 
     switch (result.status) {
@@ -112,7 +136,9 @@ class TicTacToeUI {
     let row = Math.floor(event.offsetY / TicTacToeUI.#CELL_SIZE);
     let col = Math.floor(event.offsetX / TicTacToeUI.#CELL_SIZE);
 
-    this.#processTurn(row, col, 1); // user is player '1'
+    if (this.#ticTacToe.getCell(row, col) == undefined) {
+      this.#processTurn(row, col, 1); // user is player '1'      
+    }
   }
 
 }
