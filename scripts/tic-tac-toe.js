@@ -40,9 +40,9 @@ class TicTacToe {
     // Check each row for 'player' winning across
     // Also check for uninitialized cells
     this.#log("row check");
-    for (let row in this.#board) {
+    for (let row = 0; row < this.#board.length; row++) {
       winner = true;
-      for (let col in this.#board[row]) {
+      for (let col = 0; col < this.#board[row].length; col++) {
         if (this.#board[row][col] == player) {
           // Add to list of winning cells
           winningCells.push({ row: row, column: col });
@@ -117,8 +117,8 @@ class TicTacToe {
 
     // Finally, check for uninitialized cells. If found, game can continue
     this.#log("uninitialized cell check");
-    for (let row in this.#board) {
-      for (let col in this.#board[row]) {
+    for (let row = 0; row < this.#board.length; row++) {
+      for (let col = 0; col < this.#board[row].length; col++) {
         if (this.#board[row][col] == undefined) {
           return { status: TicTacToe.NO_WINNER_CONTINUE, winningCells: null };
         }
@@ -140,7 +140,7 @@ class TicTacToe {
   }
 
   nextMove() {
-    return pickRandomCell();
+    return this.#pickRandomCell();
   }
 
 }

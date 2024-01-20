@@ -92,6 +92,14 @@ class TicTacToeUI {
     // display banner
 
     // draw winning cells
+    let str, val;
+    val = result.winningCells.pop();
+    str = "(" + val.row + ", " + val.column + "), "
+    val = result.winningCells.pop();
+    str += "(" + val.row + ", " + val.column + "), "
+    val = result.winningCells.pop();
+    str += "(" + val.row + ", " + val.column + ")"
+    console.log("winningCells=[ " + str + " ]"); 
   }
 
   #processDraw() {
