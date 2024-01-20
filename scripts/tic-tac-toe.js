@@ -21,13 +21,14 @@ class TicTacToe {
    * Mark cell on board with player (id), then check and return results:
    *  NO_WINNER_CONTINUE   : no winner yet, continue playing
    *  NO_WINNER_BOARD_FULL : no winner, board full
-   *  'player'             : 'player' is winner
+   *  PLAYER_WINS          : 'player' is winner
    */
   markAndCheck(row, col, player) {
     let winner;
     let winningCells = Array(this.#board.length);
-    
-    this.#board[row][col] = player;
+    let status = TicTacToe.NO_WINNER_BOARD_FULL;
+
+    this.#board[row][col] = player;  // Mark this cell with player id
 
     // Check each row for 'player' winning across
     // Also check for uninitialized cells
@@ -35,62 +36,80 @@ class TicTacToe {
       winner = true;
       for (let col = 0; col < this.#board[row].length; col++) {
         if (this.#board[row][col] == undefined) {
-          return { status: TicTacToe.NO_WINNER_CONTINUE, winningCells: null };
-        }
-        else if (this.#board[row][col] != player) {
+          status = TicTacToe.NO_WINNER_CONTINUE;
           winner = false;
           break;
         }
-        else {
+        else if (this.#board[row][col] == player) {
           // Add to list of winning cells
-          winningCells.push( { row: row, column: col } );
+          winningCells.push({ row: row, column: col });
+        }
+        else {
+          winner = false;
+          break;
         }
       }
       if (winner == true) {
-        return { status: PLAYER_WINS, winningCells: winningCells };
+        return { status: TicTacToe.PLAYER_WINS, winningCells: winningCells };
       }
     }
 
     // Check each column for 'player' winning down
+    winningCells.length = 0;
     for (let col = 0; col < this.#board.length; col++) {
       winner = true;
       for (let row = 0; row < this.#board[col].length; row++) {
-        if (this.#board[row][col] != player) {
+        if (this.#board[row][col] == player) {
+          // Add to list of winning cells
+          winningCells.push({ row: row, column: col });
+        }
+        else {
           winner = false;
           break;
         }
       }
       if (winner == true) {
-        return { status: PLAYER_WINS, winningCells: winningCells };
+        return { status: TicTacToe.PLAYER_WINS, winningCells: winningCells };
       }
     }
 
     // Check for 'player' winning along upper-left to lower-right diagonal
+    winningCells.length = 0;
     winner = true;
-    for (let i = 0; i < this.#board.length; i++) {
-      if (this.#board[i][i] != player) {
+    for (let indx = 0; indx < this.#board.length; indx++) {
+      if (this.#board[indx][indx] == player) {
+        // Add to list of winning cells
+        winningCells.push({ row: indx, column: indx });
+      }
+      else {
         winner = false;
         break;
       }
     }
     if (winner == true) {
-      return { status: PLAYER_WINS, winningCells: winningCells };
+      return { status: TicTacToe.PLAYER_WINS, winningCells: winningCells };
     }
 
     // Check for 'player' winning along upper-right to lower-left diagonal
+    winningCells.length = 0;
     winner = true;
     let column = this.#board.length - 1;
     for (let row = 0; row < this.#board.length; row++) {
-      if (this.#board[row][column] != player) {
+      if (this.#board[row][column] == player) {
+        // Add to list of winning cells
+        winningCells.push({ row: row, column: column });
+      }
+      else {
         winner = false;
         break;
       }
+      column--;
     }
     if (winner == true) {
-      return { status: PLAYER_WINS, winningCells: winningCells };
+      return { status: TicTacToe.PLAYER_WINS, winningCells: winningCells };
     }
 
-    return { status: TicTacToe.NO_WINNER_BOARD_FULL, winningCells: null };
+    return { status: status, winningCells: null };
   }
 
 }

@@ -27,7 +27,7 @@ class TicTacToeUI {
     this.#ticTacToe = new TicTacToe();  // Create instance of TicTacToe class
     this.#ticTacToe.init();
 
-    this.#initBoard( document.querySelector("div#ticTacToe #board") );
+    this.#initBoard(document.querySelector("div#ticTacToe #board"));
   }
 
   #initBoard(board) {
@@ -40,15 +40,13 @@ class TicTacToeUI {
     this.#canvasCtx.beginPath();
 
     // Draw vertical lines
-    for (let x = TicTacToeUI.#CELL_SIZE - 1; x < TicTacToeUI.#BOARD_SIZE - 1; x += TicTacToeUI.#CELL_SIZE + TicTacToeUI.#LINE_WIDTH)
-    {
+    for (let x = TicTacToeUI.#CELL_SIZE - 1; x < TicTacToeUI.#BOARD_SIZE - 1; x += TicTacToeUI.#CELL_SIZE + TicTacToeUI.#LINE_WIDTH) {
       this.#canvasCtx.moveTo(x, 0);
       this.#canvasCtx.lineTo(x, TicTacToeUI.#BOARD_SIZE - 1);
     }
 
     // Draw horizontal lines
-    for (let y = TicTacToeUI.#CELL_SIZE - 1; y < TicTacToeUI.#BOARD_SIZE - 1; y += TicTacToeUI.#CELL_SIZE + TicTacToeUI.#LINE_WIDTH)
-    {
+    for (let y = TicTacToeUI.#CELL_SIZE - 1; y < TicTacToeUI.#BOARD_SIZE - 1; y += TicTacToeUI.#CELL_SIZE + TicTacToeUI.#LINE_WIDTH) {
       this.#canvasCtx.moveTo(0, y);
       this.#canvasCtx.lineTo(TicTacToeUI.#BOARD_SIZE - 1, y);
     }
@@ -67,25 +65,38 @@ class TicTacToeUI {
     this.#processTurn(result.row, result.column, 2); // We're player '2'
   }
 
+  #processWin(result) {
+    // display banner
+
+    // draw winning cells
+  }
+
+  #processDraw() {
+    // display banner
+
+  }
+
   #processTurn(row, col, player) {
     console.log("row=" + row + ", column=" + col + ", player=" + player);
 
     // Mark this cell with player id
     let result = this.#ticTacToe.markAndCheck(row, col, player);
 
+    console.log("result=" + result.status);
+
     switch (result.status) {
-      case player:
-        // 'player' wins
+      case TicTacToe.PLAYER_WINS: // 'player' wins
+        this.#processWin(result);
         break;
-    
-        case TicTacToe.NO_WINNER_CONTINUE:
-          if (player == 1) {
-            this.ourTurn();
-          }
+
+      case TicTacToe.NO_WINNER_CONTINUE:
+        if (player == 1) {  // user is player '1'
+          this.ourTurn();
+        }
         break;
-    
-        case TicTacToe.NO_WINNER_BOARD_FULL:
-          // game over; no winner
+
+      case TicTacToe.NO_WINNER_BOARD_FULL: // game over; no winner
+        this.#processDraw();
         break;
 
       default:
@@ -98,8 +109,6 @@ class TicTacToeUI {
   }
 
   boardClickHandler(event) {
-    console.log("clientX=" + event.clientX + ", clientY=" + event.clientY);
-    console.log("offsetX=" + event.offsetX + ", offsetY=" + event.offsetY);
     let row = Math.floor(event.offsetY / TicTacToeUI.#CELL_SIZE);
     let col = Math.floor(event.offsetX / TicTacToeUI.#CELL_SIZE);
 
