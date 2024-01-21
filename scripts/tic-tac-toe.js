@@ -9,6 +9,10 @@ class TicTacToe {
   static NO_WINNER_CONTINUE = 0;
   static PLAYER_WINS = 1;
 
+  static WINNER_ROW = 0;
+  static WINNER_COLUMN = 1;
+  static WINNER_DIAGONAL = 2;
+
   #board;
 
   #log(str) {
@@ -33,66 +37,50 @@ class TicTacToe {
    */
   markAndCheck(row, col, player) {
     let winner;
-    let winningCells = Array(this.#board.length);
 
     this.#board[row][col] = player;  // Mark this cell with player id
 
     // Check each row for 'player' winning across
-    // Also check for uninitialized cells
     this.#log("row check");
     for (let row = 0; row < this.#board.length; row++) {
       winner = true;
       for (let col = 0; col < this.#board[row].length; col++) {
-        if (this.#board[row][col] == player) {
-          // Add to list of winning cells
-          winningCells.push({ row: row, column: col });
-        }
-        else {
+        if ((this.#board[row][col] == undefined) || (this.#board[row][col] != player)) {
           winner = false;
           break;
         }
       }
       if (winner == true) {
-        return { status: TicTacToe.PLAYER_WINS, winningCells: winningCells };
+        return { status: TicTacToe.PLAYER_WINS, winnerPath: TicTacToe.WINNER_ROW, winnerVal: row };
       }
     }
 
     // Check each column for 'player' winning down
     this.#log("column check");
-    winningCells.length = 0;
     for (let col = 0; col < this.#board.length; col++) {
       winner = true;
       for (let row = 0; row < this.#board[col].length; row++) {
-        if (this.#board[row][col] == player) {
-          // Add to list of winning cells
-          winningCells.push({ row: row, column: col });
-        }
-        else {
+        if ((this.#board[row][col] == undefined) || (this.#board[row][col] != player)) {
           winner = false;
           break;
         }
       }
       if (winner == true) {
-        return { status: TicTacToe.PLAYER_WINS, winningCells: winningCells };
+        return { status: TicTacToe.PLAYER_WINS, winnerPath: TicTacToe.WINNER_COLUMN, winnerVal: col };
       }
     }
 
     // Check for 'player' winning along upper-left to lower-right diagonal
     this.#log("diagonal1 check");
-    winningCells.length = 0;
     winner = true;
     for (let indx = 0; indx < this.#board.length; indx++) {
-      if (this.#board[indx][indx] == player) {
-        // Add to list of winning cells
-        winningCells.push({ row: indx, column: indx });
-      }
-      else {
+      if ((this.#board[indx][indx] == undefined) || (this.#board[indx][indx] != player)) {
         winner = false;
         break;
       }
     }
     if (winner == true) {
-      return { status: TicTacToe.PLAYER_WINS, winningCells: winningCells };
+      return { status: TicTacToe.PLAYER_WINS, winnerPath: TicTacToe.WINNER_DIAGONAL, winnerVal: 1 };
     }
 
     // Check for 'player' winning along upper-right to lower-left diagonal
@@ -101,18 +89,14 @@ class TicTacToe {
     winner = true;
     let column = this.#board.length - 1;
     for (let row = 0; row < this.#board.length; row++) {
-      if (this.#board[row][column] == player) {
-        // Add to list of winning cells
-        winningCells.push({ row: row, column: column });
-      }
-      else {
+      if ((this.#board[row][column] == undefined) || (this.#board[row][column] != player)) {
         winner = false;
         break;
       }
       column--;
     }
     if (winner == true) {
-      return { status: TicTacToe.PLAYER_WINS, winningCells: winningCells };
+      return { status: TicTacToe.PLAYER_WINS, winnerPath: TicTacToe.WINNER_DIAGONAL, winnerVal: 2 };
     }
 
     // Finally, check for uninitialized cells. If found, game can continue
@@ -120,13 +104,13 @@ class TicTacToe {
     for (let row = 0; row < this.#board.length; row++) {
       for (let col = 0; col < this.#board[row].length; col++) {
         if (this.#board[row][col] == undefined) {
-          return { status: TicTacToe.NO_WINNER_CONTINUE, winningCells: null };
+          return { status: TicTacToe.NO_WINNER_CONTINUE, winnerPath: null, winnerVal: null };
         }
       }
     }
 
     // No winner and no empty cells: board is full
-    return { status: TicTacToe.NO_WINNER_BOARD_FULL, winningCells: null };
+    return { status: TicTacToe.NO_WINNER_BOARD_FULL, winnerPath: null, winnerVal: null };
   }
 
   #pickRandomCell() {
