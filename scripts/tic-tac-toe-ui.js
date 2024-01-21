@@ -44,6 +44,7 @@ class TicTacToeUI {
 
   #drawBoard() {
     this.#canvasCtx.lineWidth = TicTacToeUI.#LINE_WIDTH;
+    this.#canvasCtx.strokeStyle = "darkgray";
 
     this.#canvasCtx.beginPath();
 
@@ -69,7 +70,10 @@ class TicTacToeUI {
 
   #drawCell(row, col, player) {
     let x, y;
+
+    this.#canvasCtx.strokeStyle = "black";
     this.#canvasCtx.beginPath();
+
     if (player == 1) { // user = player '1' = X
       // First, draw line from upper-left to lower-right
       x = (col * TicTacToeUI.#CELL_SIZE) + TicTacToeUI.#CELL_MARGIN;
@@ -98,11 +102,39 @@ class TicTacToeUI {
     this.#processTurn(result.row, result.column, 2); // We are player '2'
   }
 
+  #drawWinningPath(winningPathType, winningPathValue) {
+    console.log("winningPathType=" + winningPathType + ", winningPathValue=" + winningPathValue);
+    let x, y;
+
+    this.#canvasCtx.beginPath();
+
+    switch (winningPathType) {
+      case TicTacToe.WINNING_ROW:
+        y = Math.floor( (winningPathValue + 0.5) * TicTacToeUI.#CELL_SIZE );
+        this.#canvasCtx.moveTo(0, y);
+        this.#canvasCtx.lineTo(TicTacToeUI.#BOARD_SIZE - 1, y);
+        break;
+    
+      case TicTacToe.WINNING_COLUMN:
+
+        break;
+
+      case TicTacToe.WINNING_DIAGONAL:
+
+        break;
+
+      default:
+        break;
+    }
+    
+    this.#canvasCtx.stroke();
+  }
+
   #processWin(result) {
     // display banner
 
-    // draw winning cells
-    console.log("winnerPath=" + result.winnerPath + ", winnerVal=" + result.winnerVal); 
+    // draw winning path
+    this.#drawWinningPath(result.winningPathType, result.winningPathValue);
   }
 
   #processDraw() {

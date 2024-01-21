@@ -9,9 +9,9 @@ class TicTacToe {
   static NO_WINNER_CONTINUE = 0;
   static PLAYER_WINS = 1;
 
-  static WINNER_ROW = 0;
-  static WINNER_COLUMN = 1;
-  static WINNER_DIAGONAL = 2;
+  static WINNING_ROW = 0;
+  static WINNING_COLUMN = 1;
+  static WINNING_DIAGONAL = 2;
 
   #board;
 
@@ -52,7 +52,7 @@ class TicTacToe {
         break;
       }
       if (winner == true) {
-        return { status: TicTacToe.PLAYER_WINS, winnerPath: TicTacToe.WINNER_ROW, winnerVal: row };
+        return { status: TicTacToe.PLAYER_WINS, winningPathType: TicTacToe.WINNING_ROW, winningPathValue: row };
       }
     }
 
@@ -68,7 +68,7 @@ class TicTacToe {
         break;
       }
       if (winner == true) {
-        return { status: TicTacToe.PLAYER_WINS, winnerPath: TicTacToe.WINNER_COLUMN, winnerVal: col };
+        return { status: TicTacToe.PLAYER_WINS, winningPathType: TicTacToe.WINNING_COLUMN, winningPathValue: col };
       }
     }
 
@@ -83,7 +83,7 @@ class TicTacToe {
       break;
     }
     if (winner == true) {
-      return { status: TicTacToe.PLAYER_WINS, winnerPath: TicTacToe.WINNER_DIAGONAL, winnerVal: 1 };
+      return { status: TicTacToe.PLAYER_WINS, winningPathType: TicTacToe.WINNING_DIAGONAL, winningPathValue: 1 };
     }
 
     // Check for 'player' winning along upper-right to lower-left diagonal
@@ -100,7 +100,7 @@ class TicTacToe {
       break;
     }
     if (winner == true) {
-      return { status: TicTacToe.PLAYER_WINS, winnerPath: TicTacToe.WINNER_DIAGONAL, winnerVal: 2 };
+      return { status: TicTacToe.PLAYER_WINS, winningPathType: TicTacToe.WINNING_DIAGONAL, winningPathValue: 2 };
     }
 
     // Finally, check for uninitialized cells. If found, game can continue
@@ -108,13 +108,13 @@ class TicTacToe {
     for (let row = 0; row < this.#board.length; row++) {
       for (let col = 0; col < this.#board[row].length; col++) {
         if (this.#board[row][col] == undefined) {
-          return { status: TicTacToe.NO_WINNER_CONTINUE, winnerPath: null, winnerVal: null };
+          return { status: TicTacToe.NO_WINNER_CONTINUE, winningPathType: null, winningPathValue: null };
         }
       }
     }
 
     // No winner and no empty cells: board is full
-    return { status: TicTacToe.NO_WINNER_BOARD_FULL, winnerPath: null, winnerVal: null };
+    return { status: TicTacToe.NO_WINNER_BOARD_FULL, winningPathType: null, winningPathValue: null };
   }
 
   #pickRandomCell() {
