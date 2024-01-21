@@ -83,7 +83,7 @@ class TicTacToeUI {
   /** ourTurn
    * Computer takes a turn
    */
-  async ourTurn() {
+  ourTurn() {
     let result = this.#ticTacToe.nextMove();
     this.#processTurn(result.row, result.column, 2); // We are player '2'
   }
@@ -92,7 +92,7 @@ class TicTacToeUI {
     // display banner
 
     // draw winning cells
-    console.log("winnerPath=" + result.winnerPath + ", winnerVal=" + winnerVal); 
+    console.log("winnerPath=" + result.winnerPath + ", winnerVal=" + result.winnerVal); 
   }
 
   #processDraw() {
@@ -116,7 +116,7 @@ class TicTacToeUI {
 
       case TicTacToe.NO_WINNER_CONTINUE:
         if (player == 1) {  // user is player '1'
-          setTimeout(this.ourTurn(), 10);
+          setTimeout(() => this.ourTurn(), 10);
         }
         break;
 

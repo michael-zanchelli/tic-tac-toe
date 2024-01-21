@@ -85,7 +85,6 @@ class TicTacToe {
 
     // Check for 'player' winning along upper-right to lower-left diagonal
     this.#log("diagonal2 check");
-    winningCells.length = 0;
     winner = true;
     let column = this.#board.length - 1;
     for (let row = 0; row < this.#board.length; row++) {
