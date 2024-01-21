@@ -35,26 +35,36 @@ class TicTacToeUI {
     board.width = board.height = TicTacToeUI.#BOARD_SIZE;
 
     this.#canvasCtx = board.getContext("2d");
+
+    this.#drawBoard();
+    
+    // Add event Handler
+    board.onclick = (event) => this.boardClickHandler(event);
+  }
+
+  #drawBoard() {
     this.#canvasCtx.lineWidth = TicTacToeUI.#LINE_WIDTH;
 
     this.#canvasCtx.beginPath();
 
     // Draw vertical lines
-    for (let x = TicTacToeUI.#CELL_SIZE - 1; x < TicTacToeUI.#BOARD_SIZE - 1; x += TicTacToeUI.#CELL_SIZE /* + TicTacToeUI.#LINE_WIDTH */ ) {
+    for (let x = TicTacToeUI.#CELL_SIZE - 1; x < TicTacToeUI.#BOARD_SIZE - 1; x += TicTacToeUI.#CELL_SIZE) {
       this.#canvasCtx.moveTo(x, 0);
       this.#canvasCtx.lineTo(x, TicTacToeUI.#BOARD_SIZE - 1);
     }
 
     // Draw horizontal lines
-    for (let y = TicTacToeUI.#CELL_SIZE - 1; y < TicTacToeUI.#BOARD_SIZE - 1; y += TicTacToeUI.#CELL_SIZE /* + TicTacToeUI.#LINE_WIDTH */ ) {
+    for (let y = TicTacToeUI.#CELL_SIZE - 1; y < TicTacToeUI.#BOARD_SIZE - 1; y += TicTacToeUI.#CELL_SIZE) {
       this.#canvasCtx.moveTo(0, y);
       this.#canvasCtx.lineTo(TicTacToeUI.#BOARD_SIZE - 1, y);
     }
 
     this.#canvasCtx.stroke();
+  }
 
-    // Add event Handler
-    board.onclick = (event) => this.boardClickHandler(event);
+  #redrawBoard() {
+    this.#canvasCtx.clearRect(0, 0, this.#canvasCtx.canvas.width, this.#canvasCtx.canvas.height);
+    this.#drawBoard();
   }
 
   #drawCell(row, col, player) {
@@ -116,7 +126,10 @@ class TicTacToeUI {
 
       case TicTacToe.NO_WINNER_CONTINUE:
         if (player == 1) {  // user is player '1'
-          setTimeout(() => this.ourTurn(), 10);
+          setTimeout(() => this.ourTurn());
+        }
+        else {
+          this.#canvasCtx.canvas.inert = false;
         }
         break;
 
@@ -131,6 +144,9 @@ class TicTacToeUI {
 
   /** Handle New Game button click */
   newGameButtonClickHandler() {
+    this.#ticTacToe.init();
+    this.#redrawBoard();
+    this.#canvasCtx.canvas.inert = false;
   }
 
   boardClickHandler(event) {
@@ -138,6 +154,7 @@ class TicTacToeUI {
     let col = Math.floor(event.offsetX / TicTacToeUI.#CELL_SIZE);
 
     if (this.#ticTacToe.getCell(row, col) == undefined) {
+      event.target.inert = true;
       this.#processTurn(row, col, 1); // user is player '1'      
     }
   }

@@ -16,7 +16,7 @@ class TicTacToe {
   #board;
 
   #log(str) {
-    console.log(str);
+    // console.log(str);
   }
 
   init() {
@@ -93,7 +93,7 @@ class TicTacToe {
     for (let row = 0; row < this.#board.length; row++) {
       let val = this.#board[row][column];
       column--;
-      if (val != player) {
+      if (val == player) {
         continue;
       }
       winner = false;
