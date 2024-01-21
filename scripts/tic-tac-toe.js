@@ -45,10 +45,11 @@ class TicTacToe {
     for (let row = 0; row < this.#board.length; row++) {
       winner = true;
       for (let col = 0; col < this.#board[row].length; col++) {
-        if ((this.#board[row][col] == undefined) || (this.#board[row][col] != player)) {
-          winner = false;
-          break;
+        if (this.#board[row][col] == player) {
+          continue;
         }
+        winner = false;
+        break;
       }
       if (winner == true) {
         return { status: TicTacToe.PLAYER_WINS, winnerPath: TicTacToe.WINNER_ROW, winnerVal: row };
@@ -60,10 +61,11 @@ class TicTacToe {
     for (let col = 0; col < this.#board.length; col++) {
       winner = true;
       for (let row = 0; row < this.#board[col].length; row++) {
-        if ((this.#board[row][col] == undefined) || (this.#board[row][col] != player)) {
-          winner = false;
-          break;
+        if (this.#board[row][col] == player) {
+          continue;
         }
+        winner = false;
+        break;
       }
       if (winner == true) {
         return { status: TicTacToe.PLAYER_WINS, winnerPath: TicTacToe.WINNER_COLUMN, winnerVal: col };
@@ -74,10 +76,11 @@ class TicTacToe {
     this.#log("diagonal1 check");
     winner = true;
     for (let indx = 0; indx < this.#board.length; indx++) {
-      if ((this.#board[indx][indx] == undefined) || (this.#board[indx][indx] != player)) {
-        winner = false;
-        break;
+      if (this.#board[indx][indx] == player) {
+        continue;
       }
+      winner = false;
+      break;
     }
     if (winner == true) {
       return { status: TicTacToe.PLAYER_WINS, winnerPath: TicTacToe.WINNER_DIAGONAL, winnerVal: 1 };
@@ -88,11 +91,13 @@ class TicTacToe {
     winner = true;
     let column = this.#board.length - 1;
     for (let row = 0; row < this.#board.length; row++) {
-      if ((this.#board[row][column] == undefined) || (this.#board[row][column] != player)) {
-        winner = false;
-        break;
-      }
+      let val = this.#board[row][column];
       column--;
+      if (val != player) {
+        continue;
+      }
+      winner = false;
+      break;
     }
     if (winner == true) {
       return { status: TicTacToe.PLAYER_WINS, winnerPath: TicTacToe.WINNER_DIAGONAL, winnerVal: 2 };
