@@ -36,51 +36,6 @@ class TicTacToe {
     console.log(str);
   }
 
-  #incrementCounts(row, col, player) {
-    if (player == TicTacToe.PLAYER1) {
-      this.#rowCntsPlayer1[row]++;
-      this.#colCntsPlayer1[col]++;
-      this.#totalCntPlayer1++;
-    }
-    else {
-      this.#rowCntsPlayer2[row]++;
-      this.#colCntsPlayer2[col]++;
-      this.#totalCntPlayer2++;
-    }
-
-    // Increment counts for diagonals for player1 & player2
-    if ((row == 1) && (col == 1)) {
-      // Cell (1, 1) is common to both diagonals
-      if (player == TicTacToe.PLAYER1) {
-        this.#diagCntsPlayer1[0]++;
-        this.#diagCntsPlayer1[1]++;
-      }
-      else {
-        this.#diagCntsPlayer2[0]++;
-        this.#diagCntsPlayer2[1]++;
-
-      }
-    }
-    else if (row == col) {
-      // First diagonal ('0')
-      if (player == TicTacToe.PLAYER1) {
-        this.#diagCntsPlayer1[0]++;
-      }
-      else {
-        this.#diagCntsPlayer2[0]++;
-      }
-    }
-    else if (((row == 0) && (col == 2)) || ((row == 2) && (col == 0))) {
-      // Second diagonal ('1')
-      if (player == TicTacToe.PLAYER1) {
-        this.#diagCntsPlayer1[1]++;
-      }
-      else {
-        this.#diagCntsPlayer1[1]++;
-      }
-    }
-  }
-
   init() {
     this.#board = Array(3);
     for (let row = 0; row < this.#board.length; row++)
@@ -100,9 +55,57 @@ class TicTacToe {
     return this.#board[row][col];
   }
 
+  #incrementCounts(row, col, player) {
+    this.#log("incrementCounts player=" + player);
+    if (player == TicTacToe.PLAYER1) {
+      this.#log("INCREMENT PLAYER1");
+      this.#rowCntsPlayer1[row]++;
+      this.#colCntsPlayer1[col]++;
+      this.#totalCntPlayer1++;
+    }
+    else {
+      this.#log("INCREMENT PLAYER2");
+      this.#rowCntsPlayer2[row]++;
+      this.#colCntsPlayer2[col]++;
+      this.#totalCntPlayer2++;
+    }
+
+    // Increment counts for diagonals for 'player''
+    if ((row == 1) && (col == 1)) {
+      // Cell (1, 1) is common to both diagonals
+      if (player == TicTacToe.PLAYER1) {
+        this.#diagCntsPlayer1[0]++;
+        this.#diagCntsPlayer1[1]++;
+      }
+      else {
+        this.#diagCntsPlayer2[0]++;
+        this.#diagCntsPlayer2[1]++;
+      }
+    }
+    else if (row == col) {
+      // First diagonal ('0')
+      if (player == TicTacToe.PLAYER1) {
+        this.#diagCntsPlayer1[0]++;
+      }
+      else {
+        this.#diagCntsPlayer2[0]++;
+      }
+    }
+    else if (((row == 0) && (col == 2)) || ((row == 2) && (col == 0))) {
+      // Second diagonal ('1')
+      if (player == TicTacToe.PLAYER1) {
+        this.#diagCntsPlayer1[1]++;
+      }
+      else {
+        this.#diagCntsPlayer2[1]++;
+      }
+    }
+  }
+
   /**
-   * Mark cell on board, tally counts and return results.
-   *   Tale row counts, column counts, diagonal counts and total counts for player1 & player2.
+   * Mark the cell on the board, tally counts and return results.
+   *   Tally row counts, column counts, diagonal counts and total counts for
+   *   player1 & player2.
    *   Check for winner or full board and return results:
    *  NO_WINNER_CONTINUE   : no winner yet, continue playing
    *  NO_WINNER_BOARD_FULL : no winner, board full
@@ -112,9 +115,24 @@ class TicTacToe {
     this.#board[row][col] = player;  // Mark this cell with player id
 
     // Increment counts for row, column and totals for player1 & player2
-    this.#incrementCounts(player);
+    this.#incrementCounts(row, col, player);
 
-    // Cannot have a winner is not enough turns played yet
+    this.#log("rowCntsPlayer1:");
+    this.#log(this.#rowCntsPlayer1);
+    this.#log("rowCntsPlayer2:");
+    this.#log(this.#rowCntsPlayer2);
+    this.#log("colCntsPlayer1:");
+    this.#log(this.#colCntsPlayer1);
+    this.#log("colCntsPlayer2:");
+    this.#log(this.#colCntsPlayer2);
+    this.#log("diagCntsPlayer1:");
+    this.#log(this.#diagCntsPlayer1);
+    this.#log("diagCntsPlayer2:");
+    this.#log(this.#diagCntsPlayer2);
+    this.#log("totalCntPlayer1: " + this.#totalCntPlayer1);
+    this.#log("totalCntPlayer2: " + this.#totalCntPlayer2);
+    
+    // Cannot have a winner if not enough turns played yet
     if (this.#totalCntPlayer1 > 2) {
       // Check for 'player' winning across any row
       for (let row = 0; row < 3; row++) {
@@ -135,11 +153,11 @@ class TicTacToe {
       // Check for 'player' winning along either diagonal
       for (let indx = 0; indx < 2; indx++) {
         if (((player == TicTacToe.PLAYER1) & (this.#diagCntsPlayer1[0] == 3))
-          || ((player == TicTacToe.PLAYER2) & (this.#colCntsPlayer2[0] == 3))) {
+          || ((player == TicTacToe.PLAYER2) & (this.#diagCntsPlayer2[0] == 3))) {
           return { status: TicTacToe.PLAYER_WINS, winningPathType: TicTacToe.WINNING_DIAGONAL, winningPathValue: 1 };
         }
         else if (((player == TicTacToe.PLAYER1) & (this.#diagCntsPlayer1[1] == 3))
-          || ((player == TicTacToe.PLAYER2) & (this.#colCntsPlayer2[1] == 3))) {
+          || ((player == TicTacToe.PLAYER2) & (this.#diagCntsPlayer2[1] == 3))) {
           return { status: TicTacToe.PLAYER_WINS, winningPathType: TicTacToe.WINNING_DIAGONAL, winningPathValue: 2 };
         }
       }
@@ -167,18 +185,19 @@ class TicTacToe {
   /**
    * Determine next move based on some basic strategies.
    * 
-   * Note player is always 2nd player (PLAYER2); 1st player's moves are made interactively.
+   * Note player is always 2nd player (PLAYER2); 1st player's moves are made
+   * interactively.
    */
   nextMove() {
-    let secondDiagonalIndices = [ {row: 0, col: 2}, {row: 1, col: 1}, {row: 2, col: 0} ];
+    let secondDiagonalIndices = [{ row: 0, col: 2 }, { row: 1, col: 1 }, { row: 2, col: 0 }];
     let row, col;
 
     // Check rows for a winning empty cell
-    for (row = 0; row < this.#rowCntsPlayer2.length; row++) {
+    for (row = 0; row < 3; row++) {
       if ((this.#rowCntsPlayer2[row] == 2) && (this.#rowCntsPlayer1[row] == 0)) {
-        for (col = 0; col < this.#board[row].length; col++) {
+        for (col = 0; col < 3; col++) {
           if (this.#board[row][col] == undefined) {
-            console.log("found winning empty cell at (" + row + ", " + col + ")");
+            this.#log("Check rows: found winning empty cell at (" + row + ", " + col + ")");
             return { row: row, column: col };
           }
         }
@@ -186,11 +205,11 @@ class TicTacToe {
     }
 
     // Check columns for a winning empty cell
-    for (col = 0; row < this.#colCntsPlayer2.length; col++) {
-      if ((this.#colCntsPlayer2[row] == 2) && (this.#colCntsPlayer1[row] == 0)) {
-        for (row = 0; row < this.#board.length; row++) {
+    for (col = 0; col < 3; col++) {
+      if ((this.#colCntsPlayer2[col] == 2) && (this.#colCntsPlayer1[col] == 0)) {
+        for (row = 0; row < 3; row++) {
           if (this.#board[row][col] == undefined) {
-            console.log("found winning empty cell at (" + row + ", " + col + ")");
+            this.#log("Check columns: found winning empty cell at (" + row + ", " + col + ")");
             return { row: row, column: col };
           }
         }
@@ -198,28 +217,31 @@ class TicTacToe {
     }
 
     // Check diagonals for a winning empty cell
-    // Upper-left to lower-right diagonal
+    // Diagonal 1: upper-left to lower-right diagonal
     if ((this.#diagCntsPlayer2[0] == 2) && (this.#diagCntsPlayer1[0] == 0)) {
       for (let indx = 0; indx < this.#diagCntsPlayer2.length; indx++) {
         if (this.#board[indx][indx] == undefined) {
-            return { row: indx, column: indx };
+          this.#log("Check diagonals: found winning empty cell at (" + indx + ", " + indx + ")");
+          return { row: indx, column: indx };
         }
       }
     }
-    // Upper-right to lower-left diagonal
-    else if ((this.#diagCntsPlayer2[0] == 2) && (this.#diagCntsPlayer1[0] == 0)) {
+    // Diagonal 2: Upper-right to lower-left diagonal
+    else if ((this.#diagCntsPlayer2[1] == 2) && (this.#diagCntsPlayer1[1] == 0)) {
       for (let cell of secondDiagonalIndices) {
         if (this.#board[cell.row][cell.col] == undefined) {
-          return { row: row, column: col };
+          this.#log("Check diagonals: found winning empty cell at (" + cell.row + ", " + cell.col + ")");
+          return { row: cell.row, column: cell.col };
+        }
       }
     }
 
     // Check rows for a cell to block other player
-    for (row = 0; row < this.#rowCntsPlayer2.length; row++) {
+    for (row = 0; row < 3; row++) {
       if ((this.#rowCntsPlayer1[row] == 2) && (this.#rowCntsPlayer2[row] == 0)) {
-        for (col = 0; col < this.#board[row].length; col++) {
+        for (col = 0; col < 3; col++) {
           if (this.#board[row][col] == undefined) {
-            console.log("found blocking cell at (" + row + ", " + col + ")");
+            this.#log("Check rows: found blocking cell at (" + row + ", " + col + ")");
             return { row: row, column: col };
           }
         }
@@ -227,11 +249,11 @@ class TicTacToe {
     }
 
     // Check columns for a cell to block other player
-    for (col = 0; col < this.#colCntsPlayer2.length; col++) {
+    for (col = 0; col < 3; col++) {
       if ((this.#colCntsPlayer1[col] == 2) && (this.#colCntsPlayer2[col] == 0)) {
-        for (row = 0; row < this.#board.length; row++) {
+        for (row = 0; row < 3; row++) {
           if (this.#board[row][col] == undefined) {
-            console.log("found blocking cell at (" + row + ", " + col + ")");
+            this.#log("Check columns: found blocking cell at (" + row + ", " + col + ")");
             return { row: row, column: col };
           }
         }
@@ -243,15 +265,18 @@ class TicTacToe {
     if ((this.#diagCntsPlayer1[0] == 2) && (this.#diagCntsPlayer2[0] == 0)) {
       for (let indx = 0; indx < this.#diagCntsPlayer2.length; indx++) {
         if (this.#board[indx][indx] == undefined) {
-            return { row: indx, column: indx };
+          this.#log("Check diagonal 1: found blocking cell at (" + indx + ", " + indx + ")");
+          return { row: indx, column: indx };
         }
       }
     }
     // Upper-right to lower-left diagonal
-    else if ((this.#diagCntsPlayer2[0] == 2) && (this.#diagCntsPlayer1[0] == 0)) {
+    else if ((this.#diagCntsPlayer1[1] == 2) && (this.#diagCntsPlayer2[1] == 0)) {
       for (let cell of secondDiagonalIndices) {
         if (this.#board[cell.row][cell.col] == undefined) {
-          return { row: row, column: col };
+          this.#log("Check diagonal 2: found blocking cell at (" + cell.row + ", " + cell.col + ")");
+          return { row: cell.row, column: cell.col };
+        }
       }
     }
 

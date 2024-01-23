@@ -99,7 +99,7 @@ class TicTacToeUI {
    */
   ourTurn() {
     let result = this.#ticTacToe.nextMove();
-    this.#processTurn(result.row, result.column, player);
+    this.#processTurn(result.row, result.column, TicTacToe.PLAYER2);
   }
 
   #drawWinningPath(winningPathType, winningPathValue) {
