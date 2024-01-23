@@ -67,7 +67,8 @@ class TicTacToe {
       this.#totalCntPlayer2++;
     }
 
-    // Increment counts for diagonals for 'player''
+    // Increment counts for diagonals for 'player'
+    let diagCnt = (player == TicTacToe.PLAYER1) ? this.#diagCntsPlayer1 : this.#diagCntsPlayer2;
     if ((row == 1) && (col == 1)) {
       // Cell (1, 1) is common to both diagonals
       if (player == TicTacToe.PLAYER1) {
@@ -81,21 +82,11 @@ class TicTacToe {
     }
     else if (row == col) {
       // First diagonal ('0')
-      if (player == TicTacToe.PLAYER1) {
-        this.#diagCntsPlayer1[0]++;
-      }
-      else {
-        this.#diagCntsPlayer2[0]++;
-      }
+      diagCnt[0]++;
     }
     else if (((row == 0) && (col == 2)) || ((row == 2) && (col == 0))) {
       // Second diagonal ('1'), uuper-right and lower left cells
-      if (player == TicTacToe.PLAYER1) {
-        this.#diagCntsPlayer1[1]++;
-      }
-      else {
-        this.#diagCntsPlayer2[1]++;
-      }
+      diagCnt[1]++;
     }
   }
 
