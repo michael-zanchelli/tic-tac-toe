@@ -74,7 +74,7 @@ class TicTacToeUI {
     this.#canvasCtx.strokeStyle = "black";
     this.#canvasCtx.beginPath();
 
-    if (player == 1) { // user = player '1' = X
+    if (player == TicTacToe.PLAYER1) { // user = player '1' = X
       // First, draw line from upper-left to lower-right
       x = (col * TicTacToeUI.#CELL_SIZE) + TicTacToeUI.#CELL_MARGIN;
       y = (row * TicTacToeUI.#CELL_SIZE) + TicTacToeUI.#CELL_MARGIN;
@@ -99,13 +99,14 @@ class TicTacToeUI {
    */
   ourTurn() {
     let result = this.#ticTacToe.nextMove();
-    this.#processTurn(result.row, result.column, 2); // We are player '2'
+    this.#processTurn(result.row, result.column, player);
   }
 
   #drawWinningPath(winningPathType, winningPathValue) {
     console.log("winningPathType=" + winningPathType + ", winningPathValue=" + winningPathValue);
     let x, y;
 
+    this.#canvasCtx.strokeStyle = "darkgray";
     this.#canvasCtx.beginPath();
 
     switch (winningPathType) {
@@ -116,11 +117,26 @@ class TicTacToeUI {
         break;
     
       case TicTacToe.WINNING_COLUMN:
-
+        x = Math.floor( (winningPathValue + 0.5) * TicTacToeUI.#CELL_SIZE );
+        this.#canvasCtx.moveTo(x, 0);
+        this.#canvasCtx.lineTo(x, TicTacToeUI.#BOARD_SIZE - 1);
         break;
 
       case TicTacToe.WINNING_DIAGONAL:
+        switch (winningPathValue) {
+          case 1:
+            this.#canvasCtx.moveTo(0, 0);
+            this.#canvasCtx.lineTo(TicTacToeUI.#BOARD_SIZE - 1, TicTacToeUI.#BOARD_SIZE - 1);
+            break;
 
+          case 2:
+            this.#canvasCtx.moveTo(TicTacToeUI.#BOARD_SIZE - 1, 0);
+            this.#canvasCtx.lineTo(0, TicTacToeUI.#BOARD_SIZE - 1);
+            break;
+
+          default:
+            break;
+        }  
         break;
 
       default:
@@ -157,7 +173,7 @@ class TicTacToeUI {
         break;
 
       case TicTacToe.NO_WINNER_CONTINUE:
-        if (player == 1) {  // user is player '1'
+        if (player == TicTacToe.PLAYER1) {  // user is player '1'
           setTimeout(() => this.ourTurn());
         }
         else {
@@ -187,7 +203,7 @@ class TicTacToeUI {
 
     if (this.#ticTacToe.getCell(row, col) == undefined) {
       event.target.inert = true;
-      this.#processTurn(row, col, 1); // user is player '1'      
+      this.#processTurn(row, col, TicTacToe.PLAYER1); // user is player '1'      
     }
   }
 
