@@ -56,15 +56,12 @@ class TicTacToe {
   }
 
   #incrementCounts(row, col, player) {
-    this.#log("incrementCounts player=" + player);
     if (player == TicTacToe.PLAYER1) {
-      this.#log("INCREMENT PLAYER1");
       this.#rowCntsPlayer1[row]++;
       this.#colCntsPlayer1[col]++;
       this.#totalCntPlayer1++;
     }
     else {
-      this.#log("INCREMENT PLAYER2");
       this.#rowCntsPlayer2[row]++;
       this.#colCntsPlayer2[col]++;
       this.#totalCntPlayer2++;
@@ -92,7 +89,7 @@ class TicTacToe {
       }
     }
     else if (((row == 0) && (col == 2)) || ((row == 2) && (col == 0))) {
-      // Second diagonal ('1')
+      // Second diagonal ('1'), uuper-right and lower left cells
       if (player == TicTacToe.PLAYER1) {
         this.#diagCntsPlayer1[1]++;
       }
@@ -116,21 +113,6 @@ class TicTacToe {
 
     // Increment counts for row, column and totals for player1 & player2
     this.#incrementCounts(row, col, player);
-
-    this.#log("rowCntsPlayer1:");
-    this.#log(this.#rowCntsPlayer1);
-    this.#log("rowCntsPlayer2:");
-    this.#log(this.#rowCntsPlayer2);
-    this.#log("colCntsPlayer1:");
-    this.#log(this.#colCntsPlayer1);
-    this.#log("colCntsPlayer2:");
-    this.#log(this.#colCntsPlayer2);
-    this.#log("diagCntsPlayer1:");
-    this.#log(this.#diagCntsPlayer1);
-    this.#log("diagCntsPlayer2:");
-    this.#log(this.#diagCntsPlayer2);
-    this.#log("totalCntPlayer1: " + this.#totalCntPlayer1);
-    this.#log("totalCntPlayer2: " + this.#totalCntPlayer2);
     
     // Cannot have a winner if not enough turns played yet
     if (this.#totalCntPlayer1 > 2) {

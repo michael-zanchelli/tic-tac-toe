@@ -30,6 +30,10 @@ class TicTacToeUI {
     this.#initBoard(document.querySelector("div#ticTacToe #board"));
   }
 
+  #log(msg) {
+    // console.log(msg);
+  }
+
   #initBoard(board) {
     /* Initialize board size */
     board.width = board.height = TicTacToeUI.#BOARD_SIZE;
@@ -74,7 +78,7 @@ class TicTacToeUI {
     this.#canvasCtx.strokeStyle = "black";
     this.#canvasCtx.beginPath();
 
-    if (player == TicTacToe.PLAYER1) { // user = player '1' = X
+    if (player == TicTacToe.PLAYER1) { // user = player 1 = 'X'
       // First, draw line from upper-left to lower-right
       x = (col * TicTacToeUI.#CELL_SIZE) + TicTacToeUI.#CELL_MARGIN;
       y = (row * TicTacToeUI.#CELL_SIZE) + TicTacToeUI.#CELL_MARGIN;
@@ -86,7 +90,7 @@ class TicTacToeUI {
       this.#canvasCtx.moveTo(x, y);
       this.#canvasCtx.lineTo(x - TicTacToeUI.#CELL_DRAW_SIZE, y + TicTacToeUI.#CELL_DRAW_SIZE);
     }
-    else {  // player '2' = O
+    else {  // player 2 = 'O'
       x = (col * TicTacToeUI.#CELL_SIZE) + TicTacToeUI.#CELL_MARGIN + (TicTacToeUI.#CELL_DRAW_SIZE / 2);
       y = (row * TicTacToeUI.#CELL_SIZE) + TicTacToeUI.#CELL_MARGIN + (TicTacToeUI.#CELL_DRAW_SIZE / 2);
       this.#canvasCtx.arc(x, y, TicTacToeUI.#CELL_DRAW_SIZE / 2, 0, 2 * Math.PI);
@@ -103,7 +107,7 @@ class TicTacToeUI {
   }
 
   #drawWinningPath(winningPathType, winningPathValue) {
-    console.log("winningPathType=" + winningPathType + ", winningPathValue=" + winningPathValue);
+    this.#log("winningPathType=" + winningPathType + ", winningPathValue=" + winningPathValue);
     let x, y;
 
     this.#canvasCtx.strokeStyle = "darkgray";
@@ -135,11 +139,13 @@ class TicTacToeUI {
             break;
 
           default:
+            console.log("Unknown winningPathValue=" + winningPathValue);
             break;
         }  
         break;
 
       default:
+        console.log("Unknown winningPathType=" + winningPathType);
         break;
     }
     
@@ -159,13 +165,13 @@ class TicTacToeUI {
   }
 
   #processTurn(row, col, player) {
-    console.log("row=" + row + ", column=" + col + ", player=" + player);
+    this.#log("row=" + row + ", column=" + col + ", player=" + player);
 
     this.#drawCell(row, col, player);
 
     // Mark this cell with player id
     let result = this.#ticTacToe.markAndCheck(row, col, player);
-    console.log("result=" + result.status);
+    this.#log("result=" + result.status);
 
     switch (result.status) {
       case TicTacToe.PLAYER_WINS: // 'player' wins
@@ -186,6 +192,7 @@ class TicTacToeUI {
         break;
 
       default:
+        console.log("Unknown status=" + result.status);
         break;
     }
   }
