@@ -9,14 +9,8 @@ div#ticTacToe {
 
 /* Title */
 div#ticTacToe #title {
-  font: bold 20pt 'Times New Roman', serif;
+  font: bold 20pt verdana, serif;
 }
-
-/* The Drawing Board/Canvas */
-/* div#ticTacToe board { */
-  /* border: 2px solid black; */
-  /* border-radius: 4px; */
-/* } */
 
 /* New Game button */
 div#ticTacToe #newGameButton {

@@ -110,7 +110,7 @@ class TicTacToeUI {
     this.#log("winningPathType=" + winningPathType + ", winningPathValue=" + winningPathValue);
     let x, y;
 
-    this.#canvasCtx.strokeStyle = "darkgray";
+    this.#canvasCtx.strokeStyle = "#09f";
     this.#canvasCtx.beginPath();
 
     switch (winningPathType) {
@@ -161,7 +161,12 @@ class TicTacToeUI {
 
   #processDraw() {
     // display banner
-
+    this.#canvasCtx.save();
+    this.#canvasCtx.rotate(Math.PI / -4);
+    this.#canvasCtx.font = "80px verdana";
+    this.#canvasCtx.fillStyle = "#09f";
+    this.#canvasCtx.fillText("DRAW", -112, Math.floor(2.5 * TicTacToeUI.#CELL_SIZE));
+    this.#canvasCtx.restore();
   }
 
   #processTurn(row, col, player) {
